@@ -31,7 +31,7 @@ pip install -r requirements.txt
 ## 运行方式
 
 >  ```shell
->  cd src/test/suite
+>  cd XSTZ_Test_framework
 >  python TestRunner.py
 >  ```
 
