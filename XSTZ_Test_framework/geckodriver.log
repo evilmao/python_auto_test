@@ -1,0 +1,13 @@
+1522312959148	geckodriver	INFO	geckodriver 0.19.1
+1522312959153	geckodriver	INFO	Listening on 127.0.0.1:57485
+1522312961211	mozrunner::runner	INFO	Running command: "C:\\Users\\failymao\\AppData\\Local\\Mozilla Firefox\\firefox.exe" "-marionette" "-profile" "C:\\Users\\failymao\\AppData\\Local\\Temp\\rust_mozprofile.zGr5IEdG4owW"
+Unable to read VR Path Registry from C:\Users\failymao\AppData\Local\openvr\openvrpaths.vrpath
+1522312961852	Marionette	INFO	Enabled via --marionette
+Unable to read VR Path Registry from C:\Users\failymao\AppData\Local\openvr\openvrpaths.vrpath
+Unable to read VR Path Registry from C:\Users\failymao\AppData\Local\openvr\openvrpaths.vrpath
+Unable to read VR Path Registry from C:\Users\failymao\AppData\Local\openvr\openvrpaths.vrpath
+1522312962956	Marionette	INFO	Listening on port 57491
+1522312963234	Marionette	WARN	TLS certificate errors will be ignored for this session
+Unable to read VR Path Registry from C:\Users\failymao\AppData\Local\openvr\openvrpaths.vrpath
+JavaScript error: https://uc.xsmcfx.com/js/Logining.js, line 159: TypeError: navigator.appVersion.split(...)[1] is undefined
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
