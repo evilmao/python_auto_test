@@ -10,7 +10,7 @@ import os
 import time
 import unittest
 import ddt
-from src.test.common.browser import Browser, Screen
+from src.test.common.browser import Browser  # Screen
 from src.test.page.xstz_injection_page import InjectionPage
 from src.test.page.xstz_login_page import XSTZLoginPage
 from src.test.page.xstz_payway_select import ChannelSelect
@@ -62,13 +62,13 @@ class XSTZ_TEST(unittest.TestCase):
             "report_url": report_url
             }
     data2 = {}
+    browser = Browser(browser_type='firefox')
+    driver = browser.open_browser(
+        URL, maximize_window=False)
 
     @classmethod
-    # 初始化页面，传入浏览器类型，并打开浏览器
-    def setUpClass(cls):
-        browser = Browser(browser_type='firefox')
-        cls.driver = browser.open_browser(
-            cls.URL, maximize_window=False)
+    def setUpClass(cls):  # 初始化页面，传入浏览器类型，并打开浏览器
+        print("Test Starting...")
 
     def bypass_auth(self):
         '''备用：绕过验证码--添加cookie'''
@@ -86,7 +86,7 @@ class XSTZ_TEST(unittest.TestCase):
                            'value': '=%2052000312%20'})
         return driver
 
-    @Screen()
+    #@Screen(driver)
     def test_login(self):
         """ 登录测试"""
         test_action = get_func_name()                            # 获取当前测试行为，以测试函数命名规范获取
@@ -97,8 +97,9 @@ class XSTZ_TEST(unittest.TestCase):
         data1[test_action] = result["data"]
         self.data["suite"].update(data1)
         self.assertTrue(result["result"])
+        self.assertTrue(result["result"], msg=result["Exception"])
 
-    @Screen()
+    #@Screen(driver)
     def test_injection_page(self):
         '''注资页面跳转'''
         test_action = get_func_name()
@@ -109,10 +110,11 @@ class XSTZ_TEST(unittest.TestCase):
         data1 = {}
         data1[test_action] = result["data"]
         self.data["suite"].update(data1)
-        self.assertTrue((result["result"]))
+        self.assertTrue(result["result"])
+        self.assertTrue(result["result"], msg=result["Exception"])
 
     @ddt.data(*TestData())  # 数据驱动模型
-    @Screen()
+    #@Screen(driver)
     def test_payway(self, data):
         '''支付通道跳转'''
         money = Config().get("money")
@@ -129,12 +131,12 @@ class XSTZ_TEST(unittest.TestCase):
         print("当前测试通道：{}".format(payway))
         self.data2[test_action] = result["data"]
         self.data["suite"].update(self.data2)
-        self.assertTrue(result["result"])
+        self.assertTrue(result["result"], msg=result["Exception"])
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
-        insert_influxdb(cls.data)                                # 插入数据库
+        insert_influxdb(cls.data)                                  # 插入数据库
         ding_report(**cls.data)                                  # 钉钉机器人自动播报
 
 

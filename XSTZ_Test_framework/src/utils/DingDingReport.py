@@ -28,22 +28,24 @@ def ding_report(**data):  # 钉钉机器人播报
             test_action.append(k)
             if "Website" in v.keys():
                 Website = v["Website"]
-            elif v["ReturnCode"] == 0:
+            if v["ReturnCode"] == 0:
                 flag += 1
         format_data = '&ensp;' * 10
-        action = '</br>{}'.format(format_data).join(test_action)
+        action = '{}<br>'.format(format_data).join(test_action)
         ding_data = {
             "msgtype": "markdown",
             "markdown": {"title": "XSTZ测试结果",
-                         "text": "#### XSTZ自动化测试@13636269356\n " +
+                         "text": "#### XSTZ_WAP测试@13636269356\n " +
                          "> 用例个数：{}\n".format(suite_number) + '\n' +
                          "> 测试行为：{}\n " .format(action) + '\n' +
                          "> 测试站点：{}\n ".format(Website) + '\n' +
                          "> 测试结果：**Success:{}**\n ".format(flag) + '\n' +
                          "> **{0}Error:{1}**\n".format(format_data, suite_number - flag) + '\n' +
                          # "> 测试账号：{login_account} \n " .format(**data) + '\n'
-                         "> ##### 测试时间：{Test_date}[[详情]({report_url})]"
-                         .format(**data)
+                         "> ##### 测试时间：{Test_date}[[详情]({report_url})]".format(**data) + '\n' +
+                         "> #### 本消息由机器人自动发布"
+
+
                          },
             "at": {
                 "atMobiles": userlist,

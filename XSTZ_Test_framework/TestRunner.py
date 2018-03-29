@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 # author by Failymao
+
 '''组织测试案例,运行测试程序'''
 import unittest
 from src.test.case.UI.XSTZ_WAP import Config, XSTZ_TEST, report_path
@@ -25,7 +26,7 @@ def main():
     description = 'Web端测试'
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.makeSuite(
-        XSTZ_TEST, "test_xsmcfx_login"))
+        XSTZ_TEST, "test_login"))
     test_suite.addTest(unittest.makeSuite(
         XSTZ_TEST, "test_injection_page"))
     test_suite.addTest(unittest.makeSuite(XSTZ_TEST, "test_payway"))

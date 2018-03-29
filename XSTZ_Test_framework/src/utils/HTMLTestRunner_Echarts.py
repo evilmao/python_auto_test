@@ -1,18 +1,21 @@
 #*_*coding:utf-8*_*
 __author__ = "failymao"
-__version__ = "1.2"
+__version__ = "1.3"
 
 """
 Change History
 
 * 用Echarts添加执行情况统计图 (灰蓝)
-* 改成Python 3.x (灰蓝)
-* 使用 Bootstrap稍加美化 (灰蓝)
-* 改为中文 (灰蓝)
+* 改成Python 3.x 
+* 使用 Bootstrap稍加美化
+* 错误时截图保存
+* Nginx上传照片
+
 """
 import datetime
 import io
 import sys
+import time
 import unittest
 from xml.sax import saxutils
 
@@ -386,6 +389,8 @@ class Template_mixin(object):
             <td>失败</td>
             <td>错误</td>
             <td>查看</td>
+            <!--添加错误时视图展示-->
+            <td rowspan="2" align="middle">错误视图</td>
         </tr>
         %(test_list)s
         <tr id='total_row'>
@@ -394,6 +399,7 @@ class Template_mixin(object):
             <td>%(Pass)s</td>
             <td>%(fail)s</td>
             <td>%(error)s</td>
+            <td>&nbsp;</td>
             <td>&nbsp;</td>
         </tr>
     </table>
@@ -407,6 +413,7 @@ class Template_mixin(object):
         <td>%(fail)s</td>
         <td>%(error)s</td>
         <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">详情</a></td>
+
     </tr>
 """  # variables: (style, desc, count, Pass, fail, error, cid)
 
@@ -422,6 +429,9 @@ class Template_mixin(object):
     </div>
     <!--css div popup end-->
     </td>
+    
+    <!--错误视图连接-->
+    <td><img src="%(screenshot)s" /></td>
 </tr>
 """  # variables: (tid, Class, style, desc, status)
 
@@ -659,7 +669,6 @@ class HTMLTestRunner(Template_mixin):
         stylesheet = self._generate_stylesheet()
         heading = self._generate_heading(report_attrs)
         report = self._generate_report(result)
-        # print(report)
         ending = self._generate_ending()
         chart = self._generate_chart(result)
         output = self.HTML_TMPL % dict(
@@ -694,11 +703,8 @@ class HTMLTestRunner(Template_mixin):
 
     def _generate_report(self, result):
         rows = []
-        # print(result.result)
         sortedResult = self.sortResult(result.result)
-        # print(sortedResult)
-        for cid, (cls, cls_results) in enumerate(sortedResult):
-            # subtotal for a class
+        for cid, (cls, cls_results) in enumerate(sortedResult):  # subtotal for a class
             np = nf = ne = 0
             for n, t, o, e in cls_results:
                 if n == 0:
@@ -708,8 +714,7 @@ class HTMLTestRunner(Template_mixin):
                 else:
                     ne += 1
 
-            # format class description
-            if cls.__module__ == "__main__":
+            if cls.__module__ == "__main__":  # format class description
                 name = cls.__name__
             else:
                 name = "%s.%s" % (cls.__module__, cls.__name__)
@@ -750,6 +755,7 @@ class HTMLTestRunner(Template_mixin):
 
     def _generate_report_test(self, rows, cid, tid, n, t, o, e):
         # e.g. 'pt1.1', 'ft1.1', etc
+
         has_output = bool(o or e)
         tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
         name = t.id().split('.')[-1]
@@ -757,10 +763,20 @@ class HTMLTestRunner(Template_mixin):
         desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
 
+        if e:  # :e 错误输出的明细
+
+            image = "%(screenshot)s" % dict(
+                screenshot=saxutils.escape(e))  # 收集打印的错误信息
+            screenshot_a = self._screen_path(image[-21:])
+        else:  # 测试通过时，默认笑脸图标
+            screenshot_a = "http://ww1.sinaimg.cn/large/8599e4cfly1fptn1b0tckj208k06674h.jpg"
+
         script = self.REPORT_TEST_OUTPUT_TMPL % dict(
             id=tid,
-            output=saxutils.escape(o + e),
+            output=saxutils.escape(o + e)
         )
+
+        #image_name = image[-21:]
 
         row = tmpl % dict(
             tid=tid,
@@ -769,11 +785,25 @@ class HTMLTestRunner(Template_mixin):
                 n == 1 and 'failCase' or 'none')),
             desc=desc,
             script=script,
-            status=self.STATUS[n],
+            screenshot=screenshot_a,
+            status=self.STATUS[n]
+
         )
         rows.append(row)
         if not has_output:
             return
+
+    def _screen_path(self, image_name):
+        '''
+        :png_path "'\screenshot_%s' % day" nginx发布时路径
+        :png_path REPORT_PATH + '\screenshot_%s' % day 本地绝对路径
+
+        '''
+        #from src.utils.config import REPORT_PATH
+        day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        # REPORT_PATH + '\screenshot_%s' % day,nginx图片地址
+        png_path = '\screenshot_%s' % day
+        return png_path + image_name
 
     def _generate_ending(self):
         return self.ENDING_TMPL

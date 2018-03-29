@@ -20,9 +20,6 @@ class ChannelSelect(InjectionPage):
     loc_bank_inbox = (By.CSS_SELECTOR, '#bank_dom > div > i')    # 下拉框按键
     loc_bank_list = (By.CLASS_NAME, 'w-select-ul')               # 定位可选银行区域
     loc_bank_detail = (By.TAG_NAME, 'li')                        # 银行明细
-#     Verification_element = (By.CSS_SELECTOR, "#cardNumber")
-#     pi = (By.CSS_SELECTOR, '#bt-submit')
-#     p2 = 'xpath', "//input[@id='btnPay']"
 
     def select_payway(self, cn=0):
         '''pay way name method'''
@@ -90,20 +87,23 @@ class ChannelSelect(InjectionPage):
             IsSuccess = "success"
             ReturnCode = 0
             result = True
+            error_info = None
             print("Test Success!\n ")
             logger.info("第三方支付跳转成功")
-        except Exception as e:
+        except Exception:
+            error_info = self.save_screen_shot()  # 错误时保存截图:图片名称
             ReturnCode = 1
             IsSuccess = "Fail"
             result = False
             print("Test fail!")
-            logger.error("支付页面崩溃或超时！Reason:{}".format(str(e)))
+            logger.error("支付页面崩溃或超时!")
         finally:
             self.close_bank_page(bank_handle)
             self.return_payment_page
             payload = {"result": result,
                        "data": {"ReturnCode": ReturnCode,
                                 "IsSuccess": IsSuccess,
-                                }
+                                },
+                       "Exception": error_info
                        }
             return payload

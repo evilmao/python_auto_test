@@ -7,7 +7,7 @@
 
 import re
 from selenium.webdriver.common.by import By
-from src.test.common.page_v1 import BasePage
+from src.test.common.page import BasePage
 from src.utils.log import logger
 
 
@@ -57,22 +57,26 @@ class XSTZLoginPage(BasePage):  # 继承自Page类
             ReturnCode = 0
             result = True
             format_logger = ' ' * 43
+            error_info = None
             logger.info(
                 "{4}！\n{0}- 测试账户：{1}\n{2}- 服务器地址:{3}".format(format_logger, account, format_logger, Website, IsSuccess))
             print("Test success!")
             print("Test Account:{}".format(account))
         except Exception as e:
+            error_info = self.save_screen_shot()  # 错误时保存截图:图片名称
             logger.error("Test Fail！Reason:{}".format(str(e)))
             ReturnCode = 1
             IsSuccess = "Fail"
             result = False
             print("Test fail!")
-            print("Error Reason:{}")
+            print("Error Reason:{}".format(e))
         finally:
             payload = {"result": result,
                        "data": {"ReturnCode": ReturnCode,
                                 "IsSuccess": IsSuccess,
                                 "Website": Website
-                                }
+                                },
+                       "Exception": error_info
+
                        }
             return payload

@@ -3,9 +3,12 @@
 """
 - 封装的选择浏览器、打开网址的类
 """
+from functools import wraps
 import os
 import time
+
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from src.utils.config import DRIVER_PATH, REPORT_PATH
 from src.utils.log import logger
 
@@ -41,8 +44,15 @@ class Browser(object):
         if self._type in TYPES:
             self.browser = TYPES[self._type]
             logger.info('Yod had select {} browser.'.format(self._type))
+            if self._type == 'phantomjs':
+                SERVICE_ARGS = ['--load-images=true',
+                                '--disk-cache=true'
+                                ]
+                self.driver = self.browser(
+                    executable_path=EXECUTABLE_PATH[self._type], service_args=SERVICE_ARGS)
             self.driver = self.browser(
                 executable_path=EXECUTABLE_PATH[self._type])
+
         else:
             raise UnSupportBrowserTypeError('仅支持%s!' % ', '.join(TYPES.keys()))
             self.driver = None
@@ -70,24 +80,29 @@ class Browser(object):
 
 class Screen(object):
     '''单独封装一个截图功能的类'''
+    flag = 'IMAGE'
 
-    def __init__(self):
-        self.driver = webdriver.PhantomJS(
-            executable_path=EXECUTABLE_PATH["phantomjs"])
+    def __init__(self, driver):
+        self.driver = driver
+
+    def _screenshot(self, name):
+        day = time.strftime('%Y%m%d', time.localtime(time.time()))
+        screen_name = name + '.PNG'
+        path = REPORT_PATH + '\screenshot_%s' % day
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.driver.save_screenshot(path + '\\%s' % screen_name)
+        return screen_name
 
     def __call__(self, test_func):
+        @wraps(test_func)
         def wrapper(*args):
             try:
                 return test_func(*args)
-            except:
-                day = time.strftime('%Y%m%d', time.localtime(time.time()))
-                screenshot_path = REPORT_PATH + '\screenshot_%s' % day
-                if not os.path.exists(screenshot_path):
-                    os.makedirs(screenshot_path)
-                rt = time.strftime('%H%M%S', time.localtime(time.time()))
-                self.driver.get_screenshot_as_file(
-                    screenshot_path + '\\%s_%s.png' % ("XSTZ_WAP", rt))  # 截图命名及保存位置
-                raise
+            except WebDriverException:
+                raise WebDriverException(
+                    message=self.flag + self._screenshot(test_func.__qualname__))
+
         return wrapper
 
 

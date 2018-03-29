@@ -62,10 +62,12 @@ class InjectionPage(XSTZLoginPage):  # 继承STZLoginPage类
             IsSuccess = "success"
             ReturnCode = 0
             result = True
+            error_info = None
             print("Test Success!\n ")
             print("当前可用支付通道数目：{}\n".format(n))
             print("通道明细：{}".format(payway_names))
         except Exception as e:
+            error_info = self.save_screen_shot()  # 错误时保存截图:图片名称
             logger.error("Test Fail！Reason:{}".format(str(e)))
             ReturnCode = 1
             IsSuccess = "Fail"
@@ -76,7 +78,8 @@ class InjectionPage(XSTZLoginPage):  # 继承STZLoginPage类
             payload = {"result": result,
                        "data": {"ReturnCode": ReturnCode,
                                 "IsSuccess": IsSuccess,
-                                }
+                                },
+                       "Exception": error_info
                        }
             return payload
 
