@@ -1,9 +1,9 @@
 URL: #xstz登录URL
  https://uc.xsmcfx.com/login.html 
 USERNAME: # 测试用户名
- !!str 52000620    
+ !!str 520006S20    
 PWD:
- xs170999
+ XXXXX
 log: #log日志相关参数
     file_name: XSTZ_WAP.log
     backup: 5
@@ -16,7 +16,7 @@ email:    #发送email参数
     receiver: 991378415@qq.com;failymao@live.com
     HOST: smtp.ym.163.com
     sender: maoyifei@magiccompass.cn
-    password: MYFloveMSY1314
+    password: *****
 URL_BD: #百度测试地址
  http://www.baidu.com
 ip:   #socket 接口地址参数
@@ -25,7 +25,7 @@ port:
  8080
 # 钉钉播报参数
 dd_api:
-  https://oapi.dingtalk.com/robot/send?access_token=a91c216ece89737fab0dad1f8621e7cf1de09131cf38c960f26209e7cf624617
+  https://oapi.dingtalk.com/robot/send?access_token=a91c216ece89737fab0dad1f8621e7cf1de09131cf38eeec960f26209SSSe7cf624617
 # report_html地址
 report_url:
   !!str http://192.168.0.9/%s
