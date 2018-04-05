@@ -42,6 +42,7 @@ def TestData():
                     testData1.append(testdata)
         return testData1
     except TimeoutError:
+        return None
         print("服务器超时！")
 
 
@@ -124,7 +125,7 @@ class XSTZ_TEST(unittest.TestCase):
         if data["PB_number"]:                                    # 判断支付通道是否存在银行注资通道
             msg = DPage.select_bank(data["PB_number"])           # 获取当前测试银行名字
             print(msg)
-        DPage.sumbit(money)                                      # 提交
+        DPage.input_money(money)                                      # 提交
         result = DPage.is_deposit_success(
             data["locator"], data["element"])                    # 验证点
         time.sleep(1)
@@ -136,7 +137,7 @@ class XSTZ_TEST(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
-        insert_influxdb(cls.data)                                  # 插入数据库
+        insert_influxdb(cls.data)                                # 插入数据库
         ding_report(**cls.data)                                  # 钉钉机器人自动播报
 
 
