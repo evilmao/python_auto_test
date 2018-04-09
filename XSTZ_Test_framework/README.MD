@@ -62,7 +62,8 @@ pip install -r requirements.txt
 >    - Jenkins持续化集成测试
 >    - 新增ddt驱动模块，根据测试通道自动匹配测试用例个数
 >    - 页面类代码优化
->
+> 4. version 1.4 Date 9/04/2018
+>    - 集成Android端测试用例
 > ​
 >
 
