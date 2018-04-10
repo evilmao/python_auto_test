@@ -8,7 +8,13 @@
 
 
 import hashlib
+import inspect
 from src.utils.log import logger
+
+
+def get_func_name():
+    '''辅助函数用来获取当前运行的函数名'''
+    return inspect.stack()[1][3]
 
 
 class EncryptError(Exception):
