@@ -1,8 +1,9 @@
 ddt==1.1.2
-requests==2.18.4
-Faker==0.8.11
 jmespath==0.9.3
-xlrd==1.1.0
-influxdb==4.1.1
+requests==2.18.4
 selenium==3.7.0
+influxdb==4.1.1
+Faker==0.8.11
+xlrd==1.1.0
+Appium_Python_Client==0.26
 PyYAML==3.12
