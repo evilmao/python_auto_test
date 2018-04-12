@@ -8,7 +8,9 @@ import os
 import time
 import unittest
 from appium import webdriver
-from src.test.page.app_login_page import LoginPage
+from src.test.page.android_injection_page import InjectionPage
+from src.test.page.android_login_page import LoginPage
+from src.test.page.android_payway_select import ChannelSelect
 from src.utils.config import Config
 from src.utils.support import get_func_name
 
@@ -40,6 +42,23 @@ class XSTZ_Android(unittest.TestCase):
         data1[test_action] = result["data"]
         Android_data["suite"].update(data1)
         self.assertTrue(result["result"], msg=result["Exception"])
+
+    def test_Android_2_injection(self):
+        test_action = get_func_name()
+        JPage = InjectionPage(self.driver)
+        JPage.click_injection_button
+        result = JPage.is_injection_success                       # 验证点
+        data1 = {}
+        data1[test_action] = result["data"]
+        Android_data["suite"].update(data1)
+        self.assertTrue(result["result"], msg=result["Exception"])
+
+    def test_Android_3_payway(self):
+        #test_action = get_func_name()
+        DPage = ChannelSelect(self.driver)
+        DPage.select_money
+        DPage.select_payway
+        DPage.select_bank
 
     @classmethod
     def tearDownClass(cls):
@@ -73,4 +92,3 @@ if __name__ == "__main__":
 
     insert_influxdb(Android_data)                                # 插入数据库
     ding_report(**Android_data)                                  # 钉钉机器人自动播报
-    print(Android_data)
