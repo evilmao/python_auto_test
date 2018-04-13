@@ -54,11 +54,15 @@ class XSTZ_Android(unittest.TestCase):
         self.assertTrue(result["result"], msg=result["Exception"])
 
     def test_Android_3_payway(self):
-        #test_action = get_func_name()
+        test_action = get_func_name()
         DPage = ChannelSelect(self.driver)
         DPage.select_money
         DPage.select_payway
-        DPage.select_bank
+        result = DPage.is_deposit_success
+        data1 = {}
+        data1[test_action] = result["data"]
+        Android_data["suite"].update(data1)
+        self.assertTrue(result["result"], msg=result["Exception"])
 
     @classmethod
     def tearDownClass(cls):
