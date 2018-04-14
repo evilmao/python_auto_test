@@ -3,54 +3,55 @@ URL: #xstz登录URL
 USERNAME: # 测试用户名
  !!str 52000620    
 PWD:
- xs1709s99ee
+ xs170999
 log: #log日志相关参数
-    file_name: XSTZ_WAP.log
+    file_name: XSTZ_Test.log
     backup: 5
     console_level: WARNING
     file_level: DEBUG
     pattern: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-email:    #发送email参数
+    
+email:                                           #发送email参数
     title: 鑫圣投资报告
     message: XSTZ_WAP自动测试报告
-    receiver: 991378415@qq.com;failymao@live.com
+    receiver: 991378415@qq.com;failymao@live.com #接收者邮箱，多人用分号隔开
     HOST: smtp.ym.163.com
-    sender: maoyifei@magiccompass.cn
-    password: xxx
-URL_BD: #百度测试地址
+    sender: maoyifei@magiccompass.cn             #发送者邮箱
+    password: xxx                                #发送者密码
+URL_BD:                                          #百度测试地址API测试
  http://www.baidu.com
-ip:   #socket 接口地址参数
+ip:                                              #socket 接口地址参数
  127.0.0.1 
 port:
  8080
-# 钉钉播报参数
+                                                # 钉钉播报参数
 dd_api:
-  https://oapi.dingtalk.com/robot/send?access_token=a91c216ece89737fab0dad1f8621e7cf1de09131cf38c960f26209e7cf624’ss‘617
-# report_html地址
+  https://oapi.dingtalk.com/robot/send?access_token=a91c216ece89737fab0dad1f8621e7cf1de09131cf38c960f26209e7cf624617
+# html报告地址，结合nginx本地发布
 report_url:
   !!str http://192.168.0.9/%s
 # influxdb服务器连接参数
 conn_dict:
-    host: !!str 192.168.0.187
+    host: !!str 192.168.0.187                   #influxdb连接地址
     port: 8086
     username: ''
     password: ''
-    database: XSTZ_AutoTest
+    database: XSTZ_AutoTest                    #influxDB数据库
 # 入金，跳转第三方支付页面，输入金额，备注信息
 money:
- 1
+ 1000
 remark:
  Channel 1,test
-deposit_URL:
+deposit_URL: #支付页面，获取支付通道信息
   https://deposit.xsmcfx.com/injection/injection-amount.html
 # Android 虚拟机app测试参数
 desired_caps:
   platformName: Android
   platformVersion: 4.4.4
-  deviceName: 192.168.210.101:5555
-  appPackage: com.xsjinye.xsforex
-  appActivity: .ui.main.MainActivity
-Remote_URL:
+  deviceName: 192.168.210.101:5555            #此为虚拟机设备，真机通过adb命令获取
+  appPackage: com.xsjinye.xsforex             #测试app程序名
+  appActivity: .ui.main.MainActivity          #通过adb命令获取
+Remote_URL: #远程测试地址
   http://localhost:4723/wd/hub
   
   
